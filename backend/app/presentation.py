@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, cast
 
 from app.engine.holdem import HoldemEngine
 from app.engine.session import PokerSession
@@ -662,13 +662,150 @@ def opponent_view(session: PokerSession, model: OpponentModel) -> dict[str, Any]
 def exit_report_view(session: PokerSession) -> dict[str, Any]:
     summary = session.session_summary()
     decisions = session.advice_history
-    qualities = [history_decision_view(session, advice)["quality"] for advice in decisions]
+    decision_rows = [history_decision_view(session, advice) for advice in decisions]
+    qualities = [row["quality"] for row in decision_rows]
     mistakes_by_street: dict[str, int] = {}
     for advice, quality in zip(decisions, qualities, strict=True):
         if quality in {"questionable", "mistake"}:
             key = _street(advice.street)
             mistakes_by_street[key] = mistakes_by_street.get(key, 0) + 1
     followed = sum(advice.actual_action == advice.primary_action for advice in decisions)
+    follow_rate = followed / len(decisions) if decisions else 0.0
+    quality_weights = {"excellent": 100, "acceptable": 75, "questionable": 40, "mistake": 10}
+    session_score = (
+        round(sum(quality_weights[quality] for quality in qualities) / len(qualities))
+        if qualities
+        else 0
+    )
+    average_confidence = (
+        sum(float(row["confidence"]) for row in decision_rows) / len(decision_rows)
+        if decision_rows
+        else 0.0
+    )
+    total_ev_loss_bb = sum(
+        max(0.0, float(row["ev_difference"])) / max(1, int(row["big_blind"]))
+        for row in decision_rows
+    )
+    costly_decisions = sorted(
+        (
+            {
+                "id": str(row["id"]),
+                "hand_number": int(row["hand_number"]),
+                "street": str(row["street"]),
+                "chosen_action": str(row["chosen_action"]),
+                "recommended_action": str(row["final_advice"]),
+                "ev_loss_bb": round(
+                    max(0.0, float(row["ev_difference"])) / max(1, int(row["big_blind"])),
+                    2,
+                ),
+                "confidence": round(float(row["confidence"]), 4),
+                "explanation": str(row["short_explanation"]),
+            }
+            for row in decision_rows
+            if row["quality"] in {"questionable", "mistake"}
+        ),
+        key=lambda item: cast(float, item["ev_loss_bb"]),
+        reverse=True,
+    )[:3]
+
+    street_labels = {
+        "preflop": "préflop",
+        "flop": "flop",
+        "turn": "turn",
+        "river": "river",
+        "showdown": "showdown",
+        "terminee": "fin de main",
+    }
+    learning_plan: list[dict[str, str]] = []
+    if mistakes_by_street:
+        weakest_street, weakest_count = max(
+            mistakes_by_street.items(), key=lambda item: (item[1], item[0])
+        )
+        weakest_label = street_labels.get(weakest_street, weakest_street)
+        learning_plan.append(
+            {
+                "title": f"Rejouer les décisions au {weakest_label}",
+                "reason": (
+                    f"{weakest_count} décision(s) à revoir sur cette rue, "
+                    "évaluées indépendamment du résultat final."
+                ),
+                "drill": (
+                    "Ouvrir les mains concernées, masquer le conseil final, puis justifier "
+                    "une action avec l'équité, les pot odds et la profondeur effective."
+                ),
+            }
+        )
+    if total_ev_loss_bb >= 0.25:
+        learning_plan.append(
+            {
+                "title": "Réduire les décisions les plus coûteuses",
+                "reason": f"La session cumule {total_ev_loss_bb:.2f} BB d'écart d'EV estimé.",
+                "drill": (
+                    "Rejouer les trois plus gros écarts et comparer l'action choisie à "
+                    "l'action recommandée sans regarder le gain ou la perte de la main."
+                ),
+            }
+        )
+    if decisions and follow_rate < 0.70:
+        learning_plan.append(
+            {
+                "title": "Clarifier le raisonnement avant d'agir",
+                "reason": f"Le conseil principal a été suivi dans {follow_rate:.0%} des décisions.",
+                "drill": (
+                    "Avant chaque action, annoncer mentalement range, pot odds et objectif "
+                    "du sizing, "
+                    "puis comparer cette hypothèse au conseil affiché."
+                ),
+            }
+        )
+    if decisions and average_confidence < 0.60:
+        learning_plan.append(
+            {
+                "title": "Améliorer la qualité des observations",
+                "reason": f"La confiance moyenne des estimations est de {average_confidence:.0%}.",
+                "drill": (
+                    "Collecter davantage de showdowns et vérifier les profils adverses avant "
+                    "d'appliquer une adaptation exploitante forte."
+                ),
+            }
+        )
+    if not learning_plan:
+        learning_plan.append(
+            {
+                "title": "Consolider les bonnes décisions",
+                "reason": "Aucun axe prioritaire ne ressort encore de cette session.",
+                "drill": (
+                    "Rejouer deux décisions représentatives et expliquer pourquoi l'action "
+                    "retenue reste robuste face à plusieurs profils adverses."
+                ),
+            }
+        )
+    learning_plan = learning_plan[:3]
+
+    strengths: list[str] = []
+    if session_score >= 75:
+        strengths.append("Décisions globalement solides selon l'EV estimée")
+    if decisions and follow_rate >= 0.75:
+        strengths.append("Bonne discipline par rapport au plan recommandé")
+    if decisions and average_confidence >= 0.70:
+        strengths.append("Décisions prises avec un contexte statistique suffisamment étayé")
+    if not costly_decisions and decisions:
+        strengths.append("Aucune décision fortement coûteuse détectée")
+    if not strengths:
+        strengths.append("Historique exploitable pour construire un plan de progression mesurable")
+
+    coach_summary = (
+        "Session maîtrisée : conserver le processus et approfondir les décisions marginales."
+        if session_score >= 85
+        else "Base solide : quelques décisions ciblées peuvent encore améliorer la régularité."
+        if session_score >= 65
+        else (
+            "Priorité à la méthode : revoir les décisions coûteuses avant d'augmenter "
+            "la complexité."
+        )
+        if decisions
+        else "Jouez quelques mains avec le conseil actif pour obtenir un diagnostic personnalisé."
+    )
     return {
         "session_id": session.id,
         "unit": session.config.unit.value,
@@ -691,7 +828,7 @@ def exit_report_view(session: PokerSession) -> dict[str, Any]:
         "excellent": qualities.count("excellent"),
         "acceptable": qualities.count("acceptable"),
         "mistakes": qualities.count("questionable") + qualities.count("mistake"),
-        "advice_follow_rate": followed / len(decisions) if decisions else 0.0,
+        "advice_follow_rate": follow_rate,
         "street_mistakes": mistakes_by_street,
         "insights": [
             "La qualité des décisions est évaluée par l'EV estimée, "
@@ -699,4 +836,18 @@ def exit_report_view(session: PokerSession) -> dict[str, Any]:
             "Les adaptations adverses restent régularisées vers le profil neutre "
             "avec peu d'observations.",
         ],
+        "coach": {
+            "session_score": session_score,
+            "summary": coach_summary,
+            "decisions_reviewed": len(decision_rows),
+            "total_ev_loss_bb": round(total_ev_loss_bb, 2),
+            "average_confidence": round(average_confidence, 4),
+            "strengths": strengths,
+            "top_decisions": costly_decisions,
+            "learning_plan": learning_plan,
+            "methodology": (
+                "Le coach agrège les écarts d'EV, la confiance et la régularité des décisions. "
+                "Le résultat financier d'une main n'améliore ni ne dégrade sa note."
+            ),
+        },
     }

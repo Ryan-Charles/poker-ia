@@ -1,5 +1,6 @@
 # Python
 .venv/
+.pydeps/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -14,6 +15,7 @@ frontend/dist/
 frontend/coverage/
 frontend/playwright-report/
 frontend/test-results/
+*.tsbuildinfo
 
 # Runtime and packaging
 data/*.db

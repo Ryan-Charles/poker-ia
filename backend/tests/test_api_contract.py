@@ -150,6 +150,13 @@ def test_advice_history_detail_csv_and_exit_report(client: TestClient) -> None:
     report = client.post(f"/api/sessions/{session_id}/exit", json={}).json()
     assert report["session_id"] == session_id
     assert report["decisions"] == 1
+    assert 0 <= report["coach"]["session_score"] <= 100
+    assert report["coach"]["decisions_reviewed"] == 1
+    assert report["coach"]["total_ev_loss_bb"] >= 0
+    assert 0 <= report["coach"]["average_confidence"] <= 1
+    assert report["coach"]["learning_plan"]
+    assert report["coach"]["strengths"]
+    assert isinstance(report["coach"]["top_decisions"], list)
 
 
 def test_delayed_explanation_never_blocks_action_and_stays_associated(

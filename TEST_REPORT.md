@@ -1,5 +1,23 @@
 # Rapport de validation — Poker IA 1.0.0
 
+## Validation de l’extension OpenAI Build Week — 17 juillet 2026
+
+Cette passe ajoute et valide le **Coach de session** : score de décision sur 100, écart d’EV cumulé, décisions prioritaires rejouables, plan d’entraînement, points forts et export Markdown. Le score mesure la qualité estimée des décisions et ne dépend pas des gains ou pertes de la session.
+
+| Contrôle | Résultat du 17 juillet 2026 |
+| --- | --- |
+| Pytest backend | 117 tests réussis ; 1 avertissement de dépréciation Starlette/TestClient |
+| Contrat API du Coach | 12 tests réussis après formatage final |
+| Ruff | contrôles réussis ; 34 fichiers conformes au format Ruff |
+| TypeScript strict | réussi, zéro erreur |
+| ESLint | réussi, zéro avertissement |
+| Prettier | fichiers modifiés conformes |
+| Vitest | 3 fichiers, 38 tests réussis |
+| Vite | build de production réussi |
+| Playwright/Chromium | 26 scénarios sur 26 réussis, dont le parcours complet du Coach de session |
+
+Le contrôle MyPy ciblé ne signale aucune erreur dans le nouveau code du Coach. Le contrôle global expose trois diagnostics déjà présents dans le moteur (`engine/holdem.py`, `strategy/advisor.py`, `engine/session.py`) et sans lien avec cette extension. Ils n’affectent aucun des 117 tests backend ni les 26 parcours navigateur.
+
 ## Environnement
 
 - validation finale : 16 juillet 2026 ;

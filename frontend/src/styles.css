@@ -3477,6 +3477,197 @@ button.playing-card {
 .exit-hero > strong small {
   font-size: 12px;
 }
+.session-coach {
+  position: relative;
+  margin: 12px 0;
+  padding: 22px;
+  overflow: hidden;
+  border-color: rgba(91, 236, 177, 0.3);
+  background: radial-gradient(circle at 95% 0, rgba(91, 236, 177, 0.12), transparent 32%), var(--surface);
+}
+.coach-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+.coach-heading h2 {
+  margin: 3px 0 7px;
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+.coach-heading p:not(.eyebrow) {
+  max-width: 660px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.coach-score {
+  width: 88px;
+  height: 88px;
+  flex: 0 0 88px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding-top: 27px;
+  border: 1px solid rgba(91, 236, 177, 0.45);
+  border-radius: 50%;
+  background: rgba(91, 236, 177, 0.08);
+  box-shadow: inset 0 0 24px rgba(91, 236, 177, 0.08);
+}
+.coach-score strong {
+  color: var(--green);
+  font-size: 27px;
+}
+.coach-score span {
+  color: var(--muted);
+  font-size: 9px;
+}
+.coach-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 18px 0;
+}
+.coach-metrics article {
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.12);
+}
+.coach-metrics span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.coach-metrics strong {
+  font-size: 16px;
+}
+.coach-layout {
+  display: grid;
+  grid-template-columns: 0.95fr 1.2fr;
+  gap: 12px;
+}
+.coach-layout > section {
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+}
+.coach-layout h3 {
+  margin: 0 0 11px;
+  font-size: 12px;
+}
+.coach-layout ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.coach-priorities li + li,
+.coach-plan li + li {
+  margin-top: 7px;
+}
+.coach-priorities button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.025);
+  text-align: left;
+}
+.coach-priorities button:hover,
+.coach-priorities button:focus-visible {
+  border-color: rgba(91, 236, 177, 0.55);
+  background: rgba(91, 236, 177, 0.06);
+}
+.coach-priorities button > span {
+  font-size: 9px;
+  font-weight: 700;
+}
+.coach-priorities button > strong {
+  color: var(--red);
+  font-size: 10px;
+}
+.coach-priorities button > small {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 8px;
+}
+.coach-empty {
+  color: var(--muted);
+  font-size: 9px;
+}
+.coach-plan li {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 9px;
+  align-items: start;
+}
+.coach-plan li > span {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--green);
+  background: rgba(91, 236, 177, 0.1);
+  font-size: 9px;
+  font-weight: 800;
+}
+.coach-plan strong {
+  display: block;
+  font-size: 9px;
+}
+.coach-plan p,
+.coach-plan small {
+  display: block;
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.5;
+}
+.coach-plan small {
+  color: var(--text);
+}
+.coach-strengths {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.coach-strengths span {
+  padding: 6px 8px;
+  border: 1px solid rgba(91, 236, 177, 0.22);
+  border-radius: 999px;
+  color: var(--green);
+  background: rgba(91, 236, 177, 0.05);
+  font-size: 8px;
+}
+.coach-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+}
+.coach-footer p {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.55;
+}
+.coach-footer button {
+  flex: 0 0 auto;
+}
 .exit-grid {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
@@ -4078,6 +4269,25 @@ button.playing-card {
     margin: 0;
   }
   .exit-grid {
+    grid-template-columns: 1fr;
+  }
+  .coach-heading,
+  .coach-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .coach-score {
+    width: auto;
+    height: auto;
+    flex-basis: auto;
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+  .coach-score strong {
+    font-size: 20px;
+  }
+  .coach-metrics,
+  .coach-layout {
     grid-template-columns: 1fr;
   }
   .exit-hero {

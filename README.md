@@ -19,6 +19,7 @@ Le « meilleur coup » affiché est l’action légale ayant la meilleure espér
 
 ## Nouveautés
 
+- **Coach de session** : le bilan transforme désormais l’historique en score de décision, écart d’EV cumulé, décisions prioritaires cliquables et plan d’entraînement personnalisé. Le diagnostic reste indépendant des gains ou pertes de la main et peut être exporté en Markdown.
 - **Recommencer la main** : un bouton dans l’en-tête de la table remet la main en cours à son état initial (juste après les blindes/antes), après une confirmation en deux temps ; aucune carte ni action volontaire ne subsiste.
 - **Remplacer un joueur** : depuis le tiroir d’édition d’un siège (✎), un nouveau joueur peut prendre la place d’un joueur existant, y compris en cours de main ; il hérite des mises déjà engagées mais démarre avec un profil adverse entièrement vierge.
 - **Grosse blinde pilote** : en configuration, choisir quel joueur est grosse blinde dérive automatiquement la petite blinde et le bouton correspondants.
@@ -26,6 +27,10 @@ Le « meilleur coup » affiché est l’action légale ayant la meilleure espér
 - **Enchaînement automatique** : le showdown se valide seul 600 ms après la dernière carte utile saisie, et la main suivante démarre automatiquement 6 s après l’affichage du bilan (bouton « ⏸ Rester sur le bilan » pour geler ce compte à rebours).
 - **Interface de table sans défilement** : sur ordinateur (1920×1080, 1600×900, 1366×768), la page de table tient entièrement à l’écran, dans toutes les phases (jeu, saisie des cartes, showdown, bilan). Le bilan de main s’ouvre en fenêtre superposée à défilement interne ; seul le panneau de conseil défile en interne pendant le jeu.
 - **Notation des cartes** : l’interface utilise la notation anglaise (A, K, Q, J, 10 + ♠♥♦♣) partout, y compris dans le sélecteur et les mains révélées.
+
+## Extension OpenAI Build Week
+
+Le Coach de session constitue l’extension principale réalisée pendant OpenAI Build Week avec Codex. Il exploite les décisions déjà figées par le moteur local, sans transmettre les cartes, profils adverses ou historiques à un service distant. La méthode, les changements attribuables à la période du hackathon et les éléments de preuve attendus sont décrits dans [HACKATHON_EXTENSION.md](HACKATHON_EXTENSION.md).
 
 ## Installation et lancement sous Windows
 

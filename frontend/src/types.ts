@@ -321,6 +321,35 @@ export interface OpponentProfile {
   evolution: Array<{ hand: number; vpip: number; pfr: number; aggression: number }>;
 }
 
+export interface CoachDecision {
+  id: string;
+  hand_number: number;
+  street: Street;
+  chosen_action: string;
+  recommended_action: string;
+  ev_loss_bb: number;
+  confidence: number;
+  explanation: string;
+}
+
+export interface CoachLearningItem {
+  title: string;
+  reason: string;
+  drill: string;
+}
+
+export interface SessionCoach {
+  session_score: number;
+  summary: string;
+  decisions_reviewed: number;
+  total_ev_loss_bb: number;
+  average_confidence: number;
+  strengths: string[];
+  top_decisions: CoachDecision[];
+  learning_plan: CoachLearningItem[];
+  methodology: string;
+}
+
 export interface ExitReport {
   session_id: string;
   started_at: string;
@@ -346,6 +375,7 @@ export interface ExitReport {
   advice_follow_rate: number;
   street_mistakes: Record<string, number>;
   insights: string[];
+  coach: SessionCoach;
 }
 
 export interface ApiErrorPayload {

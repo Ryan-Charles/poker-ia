@@ -611,6 +611,10 @@ test('Scénario F — plusieurs mains, choix de sortie, bilan, erreurs et réouv
   await page.getByRole('dialog').getByRole('button', { name: 'Sauvegarder et sortir' }).click();
   const report = await (await exitResponse).json();
   expect(report.hands_played).toBe(3);
+  expect(report.coach.decisions_reviewed).toBe(3);
+  expect(report.coach.session_score).toBeGreaterThanOrEqual(0);
+  expect(report.coach.session_score).toBeLessThanOrEqual(100);
+  expect(report.coach.learning_plan.length).toBeGreaterThan(0);
   // Nouveau comportement : la sortie ramène à l'écran de configuration (session
   // locale effacée) ; le bilan reste accessible via un bouton dédié.
   await expect(page.getByRole('button', { name: /Installer les joueurs et commencer/ })).toBeVisible();
@@ -618,6 +622,9 @@ test('Scénario F — plusieurs mains, choix de sortie, bilan, erreurs et réouv
   await page.getByRole('button', { name: 'Voir le bilan de la table précédente' }).click();
   await expect(page.getByRole('heading', { name: 'Bilan de Ryanchl' })).toBeVisible();
   await expect(page.getByText('3 mains en', { exact: false })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Un plan concret pour la prochaine table' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Plan d’entraînement' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Exporter le bilan du coach' })).toBeVisible();
   expect((await getState(request, created.session_id)).hand.number).toBe(4);
   await page.getByRole('button', { name: 'Tous les conseils et explications' }).click();
   await expect(page.locator('.history-list-heading strong')).toHaveText('3 décisions');
