@@ -23,10 +23,15 @@ Le Coach de session est déterministe et fonctionne entièrement en local. Il ag
 
 Codex a servi à auditer l’architecture existante, définir le contrat du Coach de session, implémenter le calcul backend, construire l’expérience React, ajouter les tests et documenter la différence entre la base préexistante et l’extension du hackathon.
 
-Avant la soumission, compléter cette section avec :
+Preuves de développement déjà publiées :
+
+- base préexistante importée : [`8430a42`](https://github.com/Ryan-Charles/poker-ia/commit/8430a42d4ccccf1ff16ed614913914c5646ff065) ;
+- extension Coach de session : [`69a8e12`](https://github.com/Ryan-Charles/poker-ia/commit/69a8e12) ;
+- dépôt public : https://github.com/Ryan-Charles/poker-ia.
+
+Avant la soumission, compléter encore cette section avec :
 
 - l’identifiant `/feedback` de la session Codex principale ;
-- les dates et identifiants des commits du hackathon ;
 - une courte description du passage où GPT-5.6 a été utilisé ;
 - une capture ou un extrait du bilan du coach ;
 - le lien vers la vidéo de démonstration.

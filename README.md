@@ -24,7 +24,7 @@ Le « meilleur coup » affiché est l’action légale ayant la meilleure espér
 - **Remplacer un joueur** : depuis le tiroir d’édition d’un siège (✎), un nouveau joueur peut prendre la place d’un joueur existant, y compris en cours de main ; il hérite des mises déjà engagées mais démarre avec un profil adverse entièrement vierge.
 - **Grosse blinde pilote** : en configuration, choisir quel joueur est grosse blinde dérive automatiquement la petite blinde et le bouton correspondants.
 - **Cartes de showdown sur la table** : les cartes révélées volontairement s’affichent directement sur les sièges concernés, en plus du sélecteur.
-- **Enchaînement automatique** : le showdown se valide seul 600 ms après la dernière carte utile saisie, et la main suivante démarre automatiquement 6 s après l’affichage du bilan (bouton « ⏸ Rester sur le bilan » pour geler ce compte à rebours).
+- **Validation fluide du showdown** : le showdown se valide seul 600 ms après la dernière carte utile saisie. Le bilan reste ensuite affiché jusqu’au clic explicite sur « Main suivante → ».
 - **Interface de table sans défilement** : sur ordinateur (1920×1080, 1600×900, 1366×768), la page de table tient entièrement à l’écran, dans toutes les phases (jeu, saisie des cartes, showdown, bilan). Le bilan de main s’ouvre en fenêtre superposée à défilement interne ; seul le panneau de conseil défile en interne pendant le jeu.
 - **Notation des cartes** : l’interface utilise la notation anglaise (A, K, Q, J, 10 + ♠♥♦♣) partout, y compris dans le sélecteur et les mains révélées.
 
