@@ -1,0 +1,13 @@
+services:
+  poker-ia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:8765:8765"
+    environment:
+      POKER_IA_DATA_DIR: /app/data
+      POKER_IA_FRONTEND_DIST: /app/frontend/dist
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
